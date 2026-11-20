@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Облачные сервисы хранения в образовательной организации</title>
+<meta name="description" content="Электронный образовательный ресурс о выборе, развертывании и защите облачного хранилища в школе.">
+<style>
+  :root {
+    --navy: #12264a;
+    --navy-2: #1b3768;
+    --blue: #2563eb;
+    --blue-2: #1d4ed8;
+    --sky: #eaf2ff;
+    --sky-2: #dbe9ff;
+    --accent: #f59e0b;
+    --accent-2: #b45309;
+    --text: #1f2937;
+    --muted: #5b6b82;
+    --line: #d9e3f2;
+    --bg: #f6f9ff;
+    --white: #ffffff;
+    --green: #15803d;
+    --green-bg: #eaf7ee;
+    --red: #b91c1c;
+    --red-bg: #fdecec;
+    --shadow: 0 16px 40px rgba(18, 38, 74, 0.10);
+    --radius: 18px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "Inter", system-ui, -apple-system, Arial, sans-serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.65;
+    font-size: 17px;
+  }
+
+  h1, h2, h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.2;
+    color: var(--navy);
+    margin: 0 0 16px;
+  }
+
+  h1 { font-size: clamp(2rem, 4.2vw, 3.4rem); letter-spacing: -0.02em; }
+  h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); }
+  h3 { font-size: 1.18rem; margin-bottom: 8px; }
+
+  p { margin: 0 0 14px; }
+  a { color: var(--blue-2); }
+  a:hover { color: var(--navy); }
+
+  .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+  .skip-link {
+    position: absolute; left: -999px; top: 8px; z-index: 100;
+    background: var(--white); color: var(--navy); padding: 10px 16px;
+    border-radius: 10px; box-shadow: var(--shadow);
+  }
+  .skip-link:focus { left: 16px; }
+
+  /* Header */
+  .site-header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 72px; gap: 20px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--navy); }
+  .brand-mark {
+    width: 42px; height: 42px; border-radius: 12px;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--blue), var(--navy));
+    color: #fff; font-weight: 700; font-size: 0.82rem; letter-spacing: 0.04em;
+  }
+  .brand-text { font-weight: 700; font-size: 0.98rem; line-height: 1.25; max-width: 260px; }
+
+  .site-nav { display: flex; align-items: center; gap: 4px; }
+  .site-nav a {
+    text-decoration: none; color: var(--muted); font-weight: 600;
+    font-size: 0.92rem; padding: 9px 12px; border-radius: 10px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .site-nav a:hover, .site-nav a.active { background: var(--sky); color: var(--navy); }
+
+  .menu-toggle {
+    display: none; border: 1px solid var(--line); background: var(--white);
+    color: var(--navy); font-weight: 700; padding: 9px 14px; border-radius: 10px;
+    cursor: pointer;
+  }
+
+  /* Hero */
+  .hero {
+    background:
+      radial-gradient(900px 420px at 88% 12%, rgba(37, 99, 235, 0.34), transparent 64%),
+      linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 58%, #214d95 100%);
+    color: #eaf1ff;
+    padding: 74px 0 82px;
+    overflow: hidden;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px; align-items: center;
+  }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    font-size: 0.74rem; font-weight: 700; color: #ffd58a;
+    margin-bottom: 18px;
+  }
+  .eyebrow::before { content: ""; width: 28px; height: 2px; background: var(--accent); display: inline-block; }
+  .hero h1 { color: #fff; margin-bottom: 18px; }
+  .hero-lead { font-size: 1.12rem; color: #c9d9f5; max-width: 610px; margin-bottom: 26px; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 30px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 48px; padding: 12px 20px; border-radius: 12px;
+    font-weight: 700; font-size: 0.95rem; text-decoration: none;
+    border: 1px solid transparent; cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--accent); color: #2b1a00; }
+  .btn-primary:hover { background: #ffb020; color: #2b1a00; }
+  .btn-ghost { background: transparent; color: #eaf1ff; border-color: rgba(255, 255, 255, 0.34); }
+  .btn-ghost:hover { background: rgba(255, 255, 255, 0.10); color: #fff; }
+  .btn-solid { background: var(--blue); color: #fff; }
+  .btn-solid:hover { background: var(--blue-2); color: #fff; }
+  .btn-light { background: var(--white); color: var(--navy); border-color: var(--line); }
+  .btn-light:hover { background: var(--sky); color: var(--navy); }
+
+  .hero-stats {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px; max-width: 520px;
+  }
+  .stat {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 14px; padding: 14px 16px;
+  }
+  .stat-value { display: block; font-size: 1.45rem; font-weight: 800; color: #fff; line-height: 1.1; }
+  .stat-label { font-size: 0.8rem; color: #b9cdf0; }
+
+  .hero-card {
+    background: #fff; color: var(--text);
+    border-radius: 22px; padding: 26px;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.28);
+    position: relative;
+  }
+  .hero-card h2 { font-size: 1.08rem; margin-bottom: 6px; }
+  .hero-card p { font-size: 0.9rem; color: var(--muted); margin-bottom: 18px; }
+  .scheme {
+    display: grid; grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center; gap: 8px;
+  }
+  .scheme-node {
+    text-align: center; font-size: 0.76rem; font-weight: 700;
+    padding: 12px 8px; border-radius: 12px;
+    background: var(--sky); color: var(--navy);
+    border: 1px solid var(--sky-2);
+  }
+  .scheme-node small { display: block; font-weight: 500; color: var(--muted); font-size: 0.68rem; margin-top: 2px; }
+  .scheme-arrow { color: var(--blue); font-weight: 800; }
+  .scheme-note {
+    margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--line);
+    font-size: 0.78rem; color: var(--muted);
+  }
+
+  /* Sections */
+  .section { padding: 76px 0; }
+  section[id] { scroll-margin-top: 86px; }
+  .section-alt { background: var(--bg); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .section-head { max-width: 760px; margin-bottom: 34px; }
+  .section-kicker {
+    text-transform: uppercase; letter-spacing: 0.12em;
+    font-size: 0.72rem; font-weight: 800; color: var(--blue-2); margin-bottom: 8px;
+  }
+  .section-head p { color: var(--muted); margin-bottom: 0; }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+
+  .card {
+    background: var(--white); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 24px;
+    box-shadow: 0 2px 0 rgba(18, 38, 74, 0.02);
+  }
+  .card h3 { margin-bottom: 8px; }
+  .card p:last-child { margin-bottom: 0; }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: grid; place-items: center; margin-bottom: 14px;
+    background: var(--sky); color: var(--blue-2); font-weight: 800;
+  }
+  .card-muted { background: var(--bg); }
+
+  .num-list { counter-reset: item; list-style: none; padding: 0; margin: 0; }
+  .num-list li {
+    counter-increment: item; position: relative;
+    padding-left: 44px; margin-bottom: 14px;
+  }
+  .num-list li::before {
+    content: counter(item);
+    position: absolute; left: 0; top: 0;
+    width: 30px; height: 30px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--navy); color: #fff;
+    font-weight: 800; font-size: 0.82rem;
+  }
+
+  .check-list { list-style: none; padding: 0; margin: 0; }
+  .check-list li { position: relative; padding-left: 28px; margin-bottom: 8px; }
+  .check-list li::before {
+    content: "✓"; position: absolute; left: 0; top: 0;
+    color: var(--green); font-weight: 900;
+  }
+
+  .callout {
+    border-left: 4px solid var(--accent);
+    background: #fff8e8; border-radius: 0 14px 14px 0;
+    padding: 18px 20px; color: #5c4308;
+  }
+  .callout strong { color: #3d2b00; }
+
+  /* Theory */
+  .theory-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
+  .theory-card h3 { display: flex; align-items: center; gap: 10px; }
+  .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 28px; height: 28px; padding: 0 8px;
+    border-radius: 9px; background: var(--navy); color: #fff;
+    font-size: 0.78rem; font-weight: 800;
+  }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+  table { width: 100%; border-collapse: collapse; min-width: 620px; background: #fff; font-size: 0.92rem; }
+  th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--navy); color: #fff; font-size: 0.82rem; letter-spacing: 0.02em; }
+  tr:last-child td { border-bottom: none; }
+  tbody tr:nth-child(even) { background: #f8fbff; }
+
+  .arch {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px; margin: 18px 0 6px;
+  }
+  .arch-item {
+    border: 1px solid var(--line); border-radius: 12px; padding: 12px;
+    background: #fff; font-size: 0.8rem; text-align: center;
+  }
+  .arch-item b { display: block; color: var(--navy); margin-bottom: 4px; }
+
+  /* Practice */
+  .task { display: flex; flex-direction: column; height: 100%; }
+  .task-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .task-num {
+    flex: 0 0 auto; width: 38px; height: 38px; border-radius: 10px;
+    display: grid; place-items: center; background: var(--sky); color: var(--blue-2);
+    font-weight: 800;
+  }
+  .task h3 { margin-bottom: 4px; }
+  .task .task-goal { color: var(--muted); font-size: 0.86rem; margin-bottom: 12px; }
+  .task ol { margin: 0 0 16px 18px; padding: 0; }
+  .task ol li { margin-bottom: 6px; }
+  .task .result {
+    margin-top: auto; padding-top: 14px; border-top: 1px dashed var(--line);
+    font-size: 0.84rem; color: var(--muted);
+  }
+  .task .result b { color: var(--navy); }
+
+  .task-check {
+    display: flex; align-items: center; gap: 10px; margin-top: 14px;
+    font-size: 0.86rem; font-weight: 700; color: var(--navy); cursor: pointer;
+  }
+  .task-check input { width: 18px; height: 18px; accent-color: var(--blue); }
+
+  .progress-wrap {
+    display: flex; align-items: center; gap: 14px; margin-top: 18px;
+    background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px;
+  }
+  .progress-track { flex: 1; height: 10px; border-radius: 999px; background: var(--sky); overflow: hidden; }
+  .progress-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--blue), #38bdf8); transition: width 0.25s ease; }
+  .progress-text { font-size: 0.82rem; font-weight: 700; color: var(--navy); white-space: nowrap; }
+
+  /* Test */
+  .test-shell { max-width: 860px; margin: 0 auto; }
+  .question {
+    background: #fff; border: 1px solid var(--line); border-radius: 16px;
+    padding: 20px 22px; margin-bottom: 16px;
+  }
+  .question h3 { font-family: "Segoe UI", "Inter", system-ui, sans-serif; font-size: 1rem; margin-bottom: 12px; }
+  .q-num { color: var(--blue-2); font-weight: 800; margin-right: 6px; }
+  .options { display: grid; gap: 8px; }
+  .option {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px;
+    cursor: pointer; background: #fff; transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .option:hover { border-color: #b9cdf0; background: #f8fbff; }
+  .option input { margin-top: 4px; accent-color: var(--blue); }
+  .option.correct { border-color: #86c89b; background: var(--green-bg); }
+  .option.wrong { border-color: #e6a3a3; background: var(--red-bg); }
+  .explain {
+    display: none; margin-top: 12px; padding: 10px 12px; border-radius: 10px;
+    background: var(--bg); color: var(--muted); font-size: 0.86rem;
+  }
+  .explain.show { display: block; }
+  .test-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .score {
+    display: none; margin-top: 18px; padding: 18px 20px; border-radius: 14px;
+    background: var(--navy); color: #fff;
+  }
+  .score.show { display: block; }
+  .score b { color: #ffd58a; }
+  .score small { display: block; color: #c9d9f5; margin-top: 4px; }
+
+  /* Sources */
+  .source-list { display: grid; gap: 12px; counter-reset: src; list-style: none; padding: 0; margin: 0; }
+  .source-list li {
+    counter-increment: src; position: relative; padding: 14px 16px 14px 52px;
+    background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  }
+  .source-list li::before {
+    content: counter(src); position: absolute; left: 16px; top: 14px;
+    width: 24px; height: 24px; border-radius: 7px;
+    display: grid; place-items: center; background: var(--sky); color: var(--blue-2);
+    font-size: 0.74rem; font-weight: 800;
+  }
+  .source-list a { text-decoration: none; font-weight: 600; }
+  .source-list span { display: block; color: var(--muted); font-size: 0.82rem; margin-top: 3px; }
+
+  /* Footer */
+  .site-footer {
+    background: var(--navy); color: #c9d9f5; padding: 36px 0;
+  }
+  .footer-grid { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .site-footer strong { color: #fff; }
+  .site-footer a { color: #ffd58a; }
+  .site-footer small { display: block; margin-top: 6px; color: #9fb5da; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+    .hero { padding: 54px 0 62px; }
+    .hero-card { max-width: 620px; }
+    .grid-3, .theory-grid { grid-template-columns: 1fr 1fr; }
+    .arch { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 720px) {
+    body { font-size: 16px; }
+    .menu-toggle { display: inline-flex; }
+    .site-nav {
+      display: none; position: absolute; top: 72px; left: 20px; right: 20px;
+      flex-direction: column; align-items: stretch; gap: 4px;
+      background: #fff; border: 1px solid var(--line); border-radius: 14px;
+      padding: 10px; box-shadow: var(--shadow);
+    }
+    .site-nav.open { display: flex; }
+    .grid-3, .grid-2, .theory-grid { grid-template-columns: 1fr; }
+    .hero-stats { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .stat { padding: 10px; }
+    .stat-value { font-size: 1.15rem; }
+    .scheme { grid-template-columns: 1fr; }
+    .scheme-arrow { transform: rotate(90deg); }
+    .section { padding: 54px 0; }
+    .progress-wrap { flex-direction: column; align-items: stretch; }
+    .progress-text { text-align: right; }
+  }
+  @media (max-width: 460px) {
+    .hero-stats { grid-template-columns: 1fr; }
+    .container { width: min(1120px, calc(100% - 28px)); }
+    .brand-text { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; animation: none !important; }
+  }
+
+  @media print {
+    .site-header, .hero-actions, .menu-toggle, .test-actions, .progress-wrap { display: none !important; }
+    .hero { background: none !important; color: var(--text) !important; padding: 20px 0; }
+    .hero h1, .hero-lead, .eyebrow { color: var(--text) !important; }
+    .hero-card, .card, .question { box-shadow: none !important; break-inside: avoid; }
+    .section { padding: 24px 0; }
+    a { color: var(--text); text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Перейти к содержанию</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="#top" aria-label="На главную">
+      <span class="brand-mark">ЕИС</span>
+      <span class="brand-text">Облачные сервисы хранения</span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNav">Меню</button>
+    <nav class="site-nav" id="siteNav" aria-label="Основная навигация">
+      <a href="#about">О ресурсе</a>
+      <a href="#theory">Теория</a>
+      <a href="#practice">Практикум</a>
+      <a href="#test">Тест</a>
+      <a href="#sources">Источники</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">Электронный образовательный ресурс</div>
+        <h1>Облачные сервисы хранения в единой информационной среде школы</h1>
+        <p class="hero-lead">Учебный ресурс для педагогов и администраторов: как выбрать облачное хранилище, развернуть структуру папок, настроить доступ и защитить данные обучающихся.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#theory">Начать обучение</a>
+          <a class="btn btn-ghost" href="#test">Пройти тест</a>
+        </div>
+        <div class="hero-stats" aria-label="Кратко о ресурсе">
+          <div class="stat"><span class="stat-value">4</span><span class="stat-label">практикума</span></div>
+          <div class="stat"><span class="stat-value">10</span><span class="stat-label">вопросов теста</span></div>
+          <div class="stat"><span class="stat-value">21</span><span class="stat-label">источник</span></div>
+        </div>
+      </div>
+      <aside class="hero-card" aria-label="Схема работы облачного хранилища">
+        <h2>Как устроена среда</h2>
+        <p>Пользователь, облако и общая папка класса связаны едиными правами доступа.</p>
+        <div class="scheme">
+          <div class="scheme-node">Учитель<small>рабочее место</small></div>
+          <div class="scheme-arrow" aria-hidden="true">→</div>
+          <div class="scheme-node">Облако<small>файлы и версии</small></div>
+          <div class="scheme-arrow" aria-hidden="true">→</div>
+          <div class="scheme-node">Класс<small>общая папка</small></div>
+        </div>
+        <div class="scheme-note">Права наследуются от группы, а внешние ссылки ограничены сроком и паролем.</div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-kicker">О ресурсе</div>
+        <h2>Для кого и зачем</h2>
+        <p>Ресурс помогает перейти от разрозненных файлов на компьютерах и в личных аккаунтах к управляемой облачной среде. Материал рассчитан на самостоятельную работу и может использоваться на уроках информатики, курсах повышения квалификации и педагогических советах.</p>
+      </div>
+      <div class="grid-3">
+        <article class="card">
+          <div class="card-icon" aria-hidden="true">01</div>
+          <h3>Администрации</h3>
+          <p>Понять архитектуру облачного хранения, выбрать тариф и организовать учетные записи, группы и квоты без лишних затрат.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon" aria-hidden="true">02</div>
+          <h3>Педагогам</h3>
+          <p>Научиться публиковать материалы, выдавать задания, проверять работы и восстанавливать версии документов.</p>
+        </article>
+        <article class="card">
+          <div class="card-icon" aria-hidden="true">03</div>
+          <h3>Обучающимся</h3>
+          <p>Освоить правила именования файлов, безопасную работу с общими папками и сдачу заданий без потери данных.</p>
+        </article>
+      </div>
+      <div class="grid-2" style="margin-top:22px">
+        <article class="card card-muted">
+          <h3>Что внутри</h3>
+          <ul class="check-list">
+            <li>краткая теория без лишних определений;</li>
+            <li>четыре практических задания с проверкой;</li>
+            <li>тест из десяти вопросов с разбором;</li>
+            <li>официальные источники и нормативные документы.</li>
+          </ul>
+        </article>
+        <article class="card card-muted">
+          <h3>Как работать</h3>
+          <ol class="num-list">
+            <li>Изучите раздел «Теория» и запомните ключевые термины.</li>
+            <li>Выполните практикум на демонстрационном аккаунте.</li>
+            <li>Пройдите тест и проверьте, какие темы стоит повторить.</li>
+          </ol>
+        </article>
+      </div>
+      <div class="callout" style="margin-top:22px">
+        <strong>Важно.</strong> В учебной среде не размещайте реальные персональные данные обучающихся. Для практикума используйте обезличенные идентификаторы и демонстрационные папки.
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="theory">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-kicker">Теория</div>
+        <h2>Коротко о главном</h2>
+        <p>Четыре блока покрывают понятие облачных вычислений, модели обслуживания, архитектуру хранения и требования безопасности.</p>
+      </div>
+      <div class="theory-grid">
+        <article class="card theory-card">
+          <h3><span class="badge">1</span> Облачные вычисления</h3>
+          <p>Облачные вычисления - это модель предоставления по требованию сетевого доступа к общему пулу вычислительных ресурсов. Основные признаки: самообслуживание, широкий сетевой доступ, объединение ресурсов, эластичность и измеряемый сервис.</p>
+          <p>Для школы это означает доступ к файлам и документам с любого устройства без собственного серверного парка.</p>
+        </article>
+        <article class="card theory-card">
+          <h3><span class="badge">2</span> Модели обслуживания</h3>
+          <p>В модели IaaS организация получает виртуальные серверы и диски, в PaaS - среду разработки, в SaaS - готовый сервис. Для образовательной организации чаще всего подходит SaaS: он не требует администрирования инфраструктуры.</p>
+        </article>
+        <article class="card theory-card">
+          <h3><span class="badge">3</span> Архитектура хранения</h3>
+          <p>Данные размещаются на множестве узлов. Надежность обеспечивают репликация (обычно три копии) и кодирование с избыточностью, например схема 4+2, которой достаточно полуторакратного объема.</p>
+        </article>
+        <article class="card theory-card">
+          <h3><span class="badge">4</span> Доступ и защита</h3>
+          <p>Файловый доступ удобно организовывать через WebDAV, объектное хранение - через S3, интеграцию - через REST API. Трафик защищается TLS, доступ - двухфакторной аутентификацией и минимальными полномочиями.</p>
+        </article>
+      </div>
+
+      <div style="margin-top:30px">
+        <h3>Модели обслуживания: кто за что отвечает</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Модель</th><th>Что предоставляет провайдер</th><th>Зона ответственности школы</th><th>Пример</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><b>IaaS</b></td><td>Виртуальные серверы, диски, сеть</td><td>Операционная система, приложения, данные</td><td>Файловый сервер в облаке</td></tr>
+              <tr><td><b>PaaS</b></td><td>Среда исполнения, СУБД, очереди</td><td>Прикладной код и данные</td><td>Портал или ЛМС на платформе</td></tr>
+              <tr><td><b>SaaS</b></td><td>Готовый сервис и инфраструктура</td><td>Пользовательские данные и права</td><td>Облачный диск, почта, документы</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="margin-top:30px">
+        <h3>Путь запроса к файлу</h3>
+        <div class="arch">
+          <div class="arch-item"><b>Клиенты</b>веб, синхронизация, мобильное приложение</div>
+          <div class="arch-item"><b>Доступ</b>балансировщик, шлюз, аутентификация</div>
+          <div class="arch-item"><b>Метаданные</b>имена, версии, права, квоты</div>
+          <div class="arch-item"><b>Хранение</b>блоки, репликация, контроль целостности</div>
+        </div>
+        <p style="margin-top:12px;color:var(--muted);font-size:0.88rem">Если сервис метаданных недоступен, файлы могут быть физически сохранены, но пользователь их не увидит. Поэтому метаданные резервируют отдельно.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="practice">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-kicker">Практикум</div>
+        <h2>Четыре задания</h2>
+        <p>Выполняйте задания на демонстрационном аккаунте. Отмечайте выполненные шаги - прогресс сохраняется в браузере.</p>
+      </div>
+
+      <div class="grid-2">
+        <article class="card task">
+          <div class="task-top"><span class="task-num">1</span><div><h3>Структура папок</h3><div class="task-goal">Создать единое пространство разделов</div></div></div>
+          <ol>
+            <li>Создайте папки <b>01_Управление</b>, <b>02_Методическая работа</b>, <b>03_Классы</b>, <b>04_Проекты</b>, <b>05_Отчеты</b>, <b>06_Архив</b>, <b>07_Обмен</b>.</li>
+            <li>Внутри <b>03_Классы</b> создайте папки по параллелям.</li>
+            <li>Проверьте, что глубина вложенности не превышает четырех уровней.</li>
+          </ol>
+          <div class="result"><b>Результат:</b> структура из семи разделов, в которой педагог находит нужный документ за две минуты.</div>
+          <label class="task-check"><input type="checkbox" data-task="1"> Задание выполнено</label>
+        </article>
+
+        <article class="card task">
+          <div class="task-top"><span class="task-num">2</span><div><h3>Доступ к папке класса</h3><div class="task-goal">Настроить права группы</div></div></div>
+          <ol>
+            <li>Откройте папку класса и выберите «Настроить доступ».</li>
+            <li>Добавьте группу класса, а не отдельных учеников.</li>
+            <li>Выдайте право просмотра ученикам и редактирования учителю.</li>
+            <li>Проверьте, что посторонний пользователь не видит папку.</li>
+          </ol>
+          <div class="result"><b>Результат:</b> доступ наследуется группой, индивидуальные разрешения не используются.</div>
+          <label class="task-check"><input type="checkbox" data-task="2"> Задание выполнено</label>
+        </article>
+
+        <article class="card task">
+          <div class="task-top"><span class="task-num">3</span><div><h3>Защищенная ссылка</h3><div class="task-goal">Ограничить внешний доступ</div></div></div>
+          <ol>
+            <li>Создайте ссылку на папку с методическими материалами.</li>
+            <li>Установите срок действия и пароль.</li>
+            <li>Запретите скачивание, если нужен только просмотр.</li>
+            <li>Проверьте ссылку в режиме инкогнито.</li>
+          </ol>
+          <div class="result"><b>Результат:</b> ссылка действует ограниченное время и не раскрывает лишние файлы.</div>
+          <label class="task-check"><input type="checkbox" data-task="3"> Задание выполнено</label>
+        </article>
+
+        <article class="card task">
+          <div class="task-top"><span class="task-num">4</span><div><h3>Проверка резервной копии</h3><div class="task-goal">Убедиться, что данные восстанавливаются</div></div></div>
+          <ol>
+            <li>Выберите контрольную папку с пятью файлами.</li>
+            <li>Восстановите ее из резервной копии на отдельный носитель.</li>
+            <li>Сверьте имена, размеры и контрольные суммы.</li>
+            <li>Зафиксируйте время восстановления в журнале.</li>
+          </ol>
+          <div class="result"><b>Результат:</b> восстановление укладывается в RTO, расхождений нет.</div>
+          <label class="task-check"><input type="checkbox" data-task="4"> Задание выполнено</label>
+        </article>
+      </div>
+
+      <div class="progress-wrap" aria-live="polite">
+        <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-text" id="progressText">Выполнено 0 из 4</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="test">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-kicker">Самопроверка</div>
+        <h2>Тест из десяти вопросов</h2>
+        <p>Выберите один вариант в каждом вопросе и нажмите «Проверить». После проверки появится разбор.</p>
+      </div>
+
+      <form class="test-shell" id="quiz" novalidate>
+        <div class="question" data-q="1">
+          <h3><span class="q-num">1.</span> Что такое облачные вычисления?</h3>
+          <div class="options">
+            <label class="option"><input type="radio" name="q1" value="a"> Локальная программа для хранения файлов</label>
+            <label class="option"><input type="radio" name="q1" value="b"> Модель доступа по требованию к общему пулу ресурсов через сеть</label>
+            <label class="option"><input type="radio" name="q1" value="c"> Тип внешнего жесткого диска</label>
+          </div>
+          <div class="explain">Облачные вычисления предполагают сетевой доступ к общему пулу ресурсов, который выделяется по требованию.</div>
+        </div>
+
+        <div class="question" data-q="2">
+          <h3><span class="q-num">2.</span> Какая модель предоставляет готовый сервис без управления инфраструктурой?</h3>
+          <div class="options">
+            <label class="option"><input type="radio" name="q2" value="a"> IaaS</label>
+            <label class="option"><input type="radio" name="q2" value="b"> PaaS</label>
+            <label class="option"><input type="radio" name="q2" value="c"> SaaS</label>
+          </div>
+          <div class="explain">SaaS - готовый сервис: облачный диск, почта, онлайн-документы. Инфраструктурой управляет провайдер.</div>
+        </div>
+
+        <div class="question" data-q="3">
+          <h3><span class="q-num">3.</span> Что относится к модели IaaS?</h3>
+          <div class="options">
+            <label class="option"><input type="radio" name="q3" value="a"> Виртуальные серверы, диски и сеть</label>
+            <label class="option"><input type="radio" name="q3" value="b"> Готовый текстовый редактор</label>
+            <label class="option"><input type="radio" name="q3" value="c"> Только мобильное приложение</label>
+          </div>
+          <div class="explain">IaaS предоставляет инфраструктуру: вычислительные ресурсы, хранилище и сеть.</div>
+        </div>
+
+        <div class="question" data-q="4">
+          <h3><span class="q-num">4.</span> Зачем нужна репликация данных?</h3>
+          <div class="options">
+            <label class="option"><input type="radio" name="q4" value="a"> Чтобы ускорить набор текста</label>
+            <label class="option"><input type="radio" name="q4" value="b"> Чтобы сохранить копии при отказе оборудования</label>
+            <label class="option"><input type="radio" name="q4" value="c"> Чтобы уменьшить число пользователей</label>
+          </div>
+          <div class="explain">Репликация создает несколько копий объекта, поэтому отказ одного узла не приводит к потере данных.</div>
+        </div>
+
+        <div class="question" data-q="5">
+          <h3><span class="q-num">5.</span> Какой объем нужен для схемы кодирования 4+2?</h3>
+          <div class="options">
+            <label class="option"><input type="radio" name="q5" value="a"> В 1,5 раза больше исходного</label>
+            <label class="option"><input type="radio" name="q5" value="b"> В 3 раза больше исходного</label>
+            <label class="option"><input type="radio" name="q5" value="c"> Равен исходному</label>
+          </div>
+          <div class="explain">4 блока данных и 2 проверочных дают избыточность 50 %, то есть полуторакратный объем.</div>
+        </div>
+
+        <div class="question" data-q="6">
+          <h3><span class="q-num">6.</span> Какой протокол удобен для файлового доступа через HTTP?</h3>
+          <div class="options">
+            <label class="option"><input type="radio" name="q6" value="a"> WebDAV</label>
+            <label class="option"><input type="radio" name="q6" value="b"> SMTP</label>
+            <label class="option"><input type="radio" name="q6" value="c"> DHCP</label>
+          </div>
+          <div class="explain">WebDAV расширяет HTTP методами работы с файлами и папками, поэтому его поддерживают файловые менеджеры.</div>
+        </div>
+
+        <div class="question" data-q="7">
+          <h3><span class="q-num">7.</span> Какой интерфейс стал стандартом объектного хранения?</h3>
+          <div class="options">
+            <label class="option"><input type="radio" name="q7" value="a"> S3</label>
+            <label class="option"><input type="radio" name="q7" value="b"> SMB</label>
+            <label class="option"><input type="radio" name="q7" value="c"> NFS</label>
+          </div>
+          <div class="explain">S3 оперирует бакетами и объектами и поддерживается многими облачными платформами.</div>
+        </div>
+
+        <div class="question" data-q="8">
+          <h3><span class="q-num">8.</span> Что требует законодательство о персональных данных?</h3>
+          <div class="options">
+            <label class="option"><input type="radio" name="q8" value="a"> Хранить все данные в открытом доступе</label>
+            <label class="option"><input type="radio" name="q8" value="b"> Обрабатывать данные законно, минимизировать их и защищать доступ</label>
+            <label class="option"><input type="radio" name="q8" value="c"> Передавать данные любому желающему</label>
+          </div>
+          <div class="explain">152-ФЗ требует законной обработки, минимизации, согласия и защиты персональных данных.</div>
+        </div>
+
+        <div class="question" data-q="9">
+          <h3><span class="q-num">9.</span> Что означает RPO?</h3>
+          <div class="options">
+            <label class="option"><input type="radio" name="q9" value="a"> Допустимый объем потерянных данных</label>
+            <label class="option"><input type="radio" name="q9" value="b"> Время реакции поддержки</label>
+            <label class="option"><input type="radio" name="q9" value="c"> Число пользователей хранилища</label>
+          </div>
+          <div class="explain">RPO задает допустимую точку восстановления, то есть какой объем данных можно потерять.</div>
+        </div>
+
+        <div class="question" data-q="10">
+          <h3><span class="q-num">10.</span> Как работает принцип минимальных полномочий?</h3>
+          <div class="options">
+            <label class="option"><input type="radio" name="q10" value="a"> Всем выдается полный доступ</label>
+            <label class="option"><input type="radio" name="q10" value="b"> Пользователь получает только права, необходимые для работы</label>
+            <label class="option"><input type="radio" name="q10" value="c"> Доступ выдается по устной просьбе</label>
+          </div>
+          <div class="explain">Минимальные полномочия снижают риск случайного удаления и утечки данных.</div>
+        </div>
+
+        <div class="test-actions">
+          <button type="submit" class="btn btn-solid">Проверить результат</button>
+          <button type="button" class="btn btn-light" id="resetQuiz">Сбросить</button>
+        </div>
+        <div class="score" id="score" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="section" id="sources">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-kicker">Источники</div>
+        <h2>Что почитать и проверить</h2>
+        <p>Нормативные документы, стандарты и официальная документация провайдеров. Ссылки открываются в новой вкладке.</p>
+      </div>
+      <ol class="source-list">
+        <li><a href="https://www.consultant.ru/document/cons_doc_LAW_140174/" target="_blank" rel="noopener">Федеральный закон № 273-ФЗ «Об образовании в Российской Федерации»</a><span>Базовый документ об образовательной деятельности и информационной открытости.</span></li>
+        <li><a href="https://www.consultant.ru/document/cons_doc_LAW_61801/" target="_blank" rel="noopener">Федеральный закон № 152-ФЗ «О персональных данных»</a><span>Требования к обработке, хранению и защите персональных данных.</span></li>
+        <li><a href="https://www.consultant.ru/document/cons_doc_LAW_61798/" target="_blank" rel="noopener">Федеральный закон № 149-ФЗ «Об информации, информационных технологиях и о защите информации»</a><span>Общие правила работы с информацией и ограничением доступа.</span></li>
+        <li><a href="https://www.consultant.ru/document/cons_doc_LAW_137356/" target="_blank" rel="noopener">Постановление Правительства РФ № 1119</a><span>Требования к защите персональных данных в информационных системах.</span></li>
+        <li><a href="https://fstec.ru/dokumenty/vse-dokumenty/prikazy/prikaz-fstek-rossii-ot-18-fevralya-2013-g-n-21" target="_blank" rel="noopener">Приказ ФСТЭК России № 21</a><span>Состав и содержание организационных и технических мер защиты.</span></li>
+        <li><a href="https://www.iso.org/standard/27001" target="_blank" rel="noopener">ISO/IEC 27001</a><span>Международный стандарт системы менеджмента информационной безопасности.</span></li>
+        <li><a href="https://csrc.nist.gov/publications/detail/sp/800-145/final" target="_blank" rel="noopener">NIST SP 800-145. The NIST Definition of Cloud Computing</a><span>Классическое определение облачных вычислений и пяти признаков.</span></li>
+        <li><a href="https://yandex.ru/support/yandex-360/business/purchase/ru/plans/special-offer-edu" target="_blank" rel="noopener">Яндекс 360 для образовательных учреждений</a><span>Образовательное предложение: 15 учебных и один рабочий аккаунт.</span></li>
+        <li><a href="https://yandex.ru/dev/disk-api/doc/ru/" target="_blank" rel="noopener">API Яндекс Диска</a><span>REST API для файлов, папок, ссылок и метаданных.</span></li>
+        <li><a href="https://docs.nextcloud.com/server/latest/admin_manual/" target="_blank" rel="noopener">Nextcloud Administration Manual</a><span>Пример организации частного облака и разграничения прав.</span></li>
+        <li><a href="https://docs.ceph.com/en/latest/" target="_blank" rel="noopener">Ceph Documentation</a><span>Репликация, кодирование с избыточностью и архитектура хранения.</span></li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>Облачные сервисы хранения в образовательной организации</strong>
+      <small>Электронный образовательный ресурс. 2026.</small>
+    </div>
+    <div>
+      <small>Автор: [Ф.И.О.]</small>
+      <small>Курсовая работа по дисциплине «Архитектура вычислительных систем»</small>
+    </div>
+    <div>
+      <small><a href="#top">Вернуться наверх</a></small>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    "use strict";
+
+    var menuToggle = document.getElementById("menuToggle");
+    var nav = document.getElementById("siteNav");
+    if (menuToggle && nav) {
+      menuToggle.addEventListener("click", function () {
+        var open = nav.classList.toggle("open");
+        menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      nav.addEventListener("click", function (event) {
+        if (event.target.tagName === "A") {
+          nav.classList.remove("open");
+          menuToggle.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+
+    var links = Array.prototype.slice.call(document.querySelectorAll(".site-nav a"));
+    var sections = links.map(function (link) {
+      return document.querySelector(link.getAttribute("href"));
+    }).filter(Boolean);
+
+    if ("IntersectionObserver" in window && sections.length) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            links.forEach(function (link) {
+              link.classList.toggle("active", link.getAttribute("href") === "#" + entry.target.id);
+            });
+          }
+        });
+      }, { rootMargin: "-45% 0px -50% 0px" });
+      sections.forEach(function (section) { observer.observe(section); });
+    }
+
+    var boxes = Array.prototype.slice.call(document.querySelectorAll(".task-check input"));
+    var progressBar = document.getElementById("progressBar");
+    var progressText = document.getElementById("progressText");
+    var storageKey = "cloud-course-progress-v1";
+
+    function readProgress() {
+      try {
+        return JSON.parse(localStorage.getItem(storageKey) || "{}");
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function saveProgress(data) {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(data));
+      } catch (error) {
+        /* localStorage может быть недоступен */
+      }
+    }
+
+    function updateProgress() {
+      var done = boxes.filter(function (box) { return box.checked; }).length;
+      var percent = boxes.length ? Math.round((done / boxes.length) * 100) : 0;
+      if (progressBar) progressBar.style.width = percent + "%";
+      if (progressText) progressText.textContent = "Выполнено " + done + " из " + boxes.length;
+    }
+
+    var saved = readProgress();
+    boxes.forEach(function (box) {
+      var key = box.getAttribute("data-task");
+      if (saved[key]) box.checked = true;
+      box.addEventListener("change", function () {
+        var data = readProgress();
+        data[key] = box.checked;
+        saveProgress(data);
+        updateProgress();
+      });
+    });
+    updateProgress();
+
+    var quiz = document.getElementById("quiz");
+    var scoreBox = document.getElementById("score");
+    var reset = document.getElementById("resetQuiz");
+    var answers = { q1: "b", q2: "c", q3: "a", q4: "b", q5: "a", q6: "a", q7: "a", q8: "b", q9: "a", q10: "b" };
+    var explanations = {};
+
+    document.querySelectorAll(".question").forEach(function (question) {
+      explanations[question.getAttribute("data-q")] = question.querySelector(".explain");
+    });
+
+    if (quiz) {
+      quiz.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var correct = 0;
+        var answered = 0;
+
+        Object.keys(answers).forEach(function (name) {
+          var options = Array.prototype.slice.call(quiz.querySelectorAll('input[name="' + name + '"]'));
+          var chosen = options.find(function (option) { return option.checked; });
+          var question = quiz.querySelector('.question[data-q="' + name.replace("q", "") + '"]');
+          var explain = explanations[name.replace("q", "")];
+
+          options.forEach(function (option) {
+            option.closest(".option").classList.remove("correct", "wrong");
+          });
+          if (explain) explain.classList.add("show");
+
+          if (chosen) {
+            answered += 1;
+            if (chosen.value === answers[name]) {
+              correct += 1;
+              chosen.closest(".option").classList.add("correct");
+            } else {
+              chosen.closest(".option").classList.add("wrong");
+              var right = options.find(function (option) { return option.value === answers[name]; });
+              if (right) right.closest(".option").classList.add("correct");
+            }
+          } else {
+            var right = options.find(function (option) { return option.value === answers[name]; });
+            if (right) right.closest(".option").classList.add("correct");
+          }
+        });
+
+        var message = "Ваш результат: " + correct + " из 10.";
+        if (correct >= 9) message += " Отличный уровень.";
+        else if (correct >= 7) message += " Хороший результат, повторите отдельные темы.";
+        else if (correct >= 5) message += " Удовлетворительно, стоит вернуться к теории.";
+        else message += " Начните с раздела «Теория» и попробуйте снова.";
+
+        scoreBox.innerHTML = "<b>" + message + "</b><small>Отвечено вопросов: " + answered + " из 10. Разбор ответов показан под каждым вопросом.</small>";
+        scoreBox.classList.add("show");
+        scoreBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }
+
+    if (reset) {
+      reset.addEventListener("click", function () {
+        quiz.reset();
+        quiz.querySelectorAll(".option").forEach(function (option) {
+          option.classList.remove("correct", "wrong");
+        });
+        quiz.querySelectorAll(".explain").forEach(function (explain) {
+          explain.classList.remove("show");
+        });
+        scoreBox.classList.remove("show");
+        scoreBox.innerHTML = "";
+        quiz.querySelectorAll(".question").forEach(function (question) {
+          question.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+    }
+  })();
+</script>
+</body>
+</html>
